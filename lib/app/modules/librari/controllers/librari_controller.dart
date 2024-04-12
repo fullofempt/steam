@@ -1,22 +1,6 @@
 import 'package:get/get.dart';
+import 'package:steam/app/models/gameModel.dart';
 
-// Внутренний класс, представляющий игру
-class Game {
-  final String name; // Название игры
-  final String imagePath; // Путь к изображению игры
-  final String playTime; // Время в игре
-  // Предполагаемое поле для даты добавления
-  final DateTime addedDate;
-  final String lastPlayed;
-
-  Game(
-      {required this.name,
-      required this.imagePath,
-      required this.playTime,
-      required this.addedDate,
-      required this.lastPlayed,
-      });
-}
 
 class LibrariController extends GetxController {
   // Список игр
