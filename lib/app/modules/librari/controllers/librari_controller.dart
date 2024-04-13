@@ -1,89 +1,47 @@
 import 'package:get/get.dart';
 import 'package:steam/app/models/gameModel.dart';
-
+import 'package:steam/app/services/fakeApiServices.dart';
 
 class LibrariController extends GetxController {
+  final FakeApiService _apiService = Get.put(FakeApiService()); // Инициализация FakeApiService
+
   // Список игр
-  RxList<Game> games = <Game>[
-    Game(
-      name: 'Counter Strike 2',
-      imagePath: 'assets/images/cs2.jpg',
-      playTime: '556 hours',
-      lastPlayed: '1 april',
-      addedDate: DateTime.now(),
-    ),
-    Game(
-      name: 'Dota 2',
-      imagePath: 'assets/images/dota2.jpg',
-      playTime: '2351 hours',
-      lastPlayed: '5 april',
-      addedDate: DateTime.now(),
-    ),
-    Game(
-      name: 'Golf It',
-      imagePath: 'assets/images/golfit.jpg',
-      playTime: '200 hours',
-      lastPlayed: '31 april',
-      addedDate: DateTime.now(),
-    ),
-    Game(
-      name: 'Monopoly',
-      imagePath: 'assets/images/monopoly.png',
-      playTime: '20 hours',
-      lastPlayed: '12 april',
-      addedDate: DateTime.now(),
-    ),
-    Game(
-      name: 'Red dead redemtion 2',
-      imagePath: 'assets/images/rdr2.png',
-      playTime: '223 hours',
-      lastPlayed: '12 may',
-      addedDate: DateTime.now(),
-    ),
-    Game(
-      name: 'Content Warning',
-      imagePath: 'assets/images/cwar.png',
-      playTime: '5 hours',
-      lastPlayed: '12 december',
-      addedDate: DateTime.now(),
-    ),
-    Game(
-      name: 'Crab Game',
-      imagePath: 'assets/images/crabgame.png',
-      playTime: '51 hours',
-      lastPlayed: '2 april',
-      addedDate: DateTime.now(),
-    ),
-    Game(
-      name: 'Fishing Planet',
-      imagePath: 'assets/images/fishingplanet.png',
-      playTime: '3000 hours',
-      lastPlayed: '1 april',
-      addedDate: DateTime.now(),
-    ),
-    Game(
-      name: 'Battle Bit Remastered',
-      imagePath: 'assets/images/bbrem.png',
-      playTime: '52 hours',
-      lastPlayed: '1 may',
-      addedDate: DateTime.now(),
-    ),
-  ].obs;
+  RxList<Game> games = <Game>[].obs;
 
   var sortOption = "Name".obs;
 
+  // Сортировка по имени
   void sortByName() {
-    games.sort((a, b) => a.name.compareTo(b.name));
+    games.value.sort((a, b) => a.name.compareTo(b.name));
     sortOption.value = 'Name';
+    update();
   }
 
+  // Сортировка по времени в игре
   void sortByPlayTime() {
-    games.sort((a, b) => a.playTime.compareTo(b.playTime));
+    games.value.sort((a, b) => a.playTime.compareTo(b.playTime));
     sortOption.value = 'PlayTime';
+    update();
   }
 
+  // Сортировка по последнему запуску
   void sortByRecent() {
-    games.sort((a, b) => b.addedDate.compareTo(a.addedDate));
+    games.value.sort((a, b) => b.lastPlayed.compareTo(a.lastPlayed));
     sortOption.value = 'Recent';
+    update();
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    _fetchGames();
+  }
+
+  Future<void> _fetchGames() async {
+    try {
+      games.value = await _apiService.getGames();
+    } catch (e) {
+      print("Error fetching games: $e");
+    }
   }
 }

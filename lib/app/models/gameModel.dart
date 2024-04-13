@@ -1,4 +1,6 @@
 // Внутренний класс, представляющий игру
+import 'dart:ffi';
+
 class Game {
   final String name;
   final String imagePath;
